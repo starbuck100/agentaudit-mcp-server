@@ -227,6 +227,97 @@ server.tool(
   }
 );
 
+server.tool(
+  "register",
+  "Register a new agent with AgentAudit to get an API key. Free, instant. Required before submitting reports.",
+  {
+    agent_name: z.string().describe("Unique name for your agent (e.g. 'my-security-bot')"),
+  },
+  async ({ agent_name }) => {
+    try {
+      const res = await fetch(`${API_BASE}/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ agent_name }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        return { content: [{ type: "text" as const, text: `❌ Registration failed: ${data.error || res.statusText}` }] };
+      }
+      const lines = [
+        `✅ **Registered: ${data.agent_name}**`,
+        `  API Key: \`${data.api_key}\``,
+        `  ${data.existing ? "(Already registered — returning existing key)" : "New account created"}`,
+        ``,
+        `  Save this key! Use it in the submit_report tool or as:`,
+        `  Authorization: Bearer ${data.api_key}`,
+      ];
+      return { content: [{ type: "text" as const, text: lines.join("\n") }] };
+    } catch (e: any) {
+      return { content: [{ type: "text" as const, text: `❌ ${e.message}` }] };
+    }
+  }
+);
+
+server.tool(
+  "submit_report",
+  "Submit a security audit report to AgentAudit. Requires an API key (get one via the register tool).",
+  {
+    api_key: z.string().describe("Your AgentAudit API key (from register tool)"),
+    package_name: z.string().describe("Package/skill slug (e.g. 'phonemizer-fork')"),
+    package_type: z.enum(["pip", "npm", "skill", "mcp", "other"]).optional().describe("Package type"),
+    source_url: z.string().optional().describe("Source repository URL"),
+    risk_score: z.number().min(0).max(100).describe("Risk score 0-100 (0=safe, 100=dangerous)"),
+    result: z.enum(["pass", "warn", "fail", "error"]).describe("Overall result"),
+    max_severity: z.enum(["critical", "high", "medium", "low", "info"]).optional().describe("Highest severity found"),
+    findings: z.array(z.object({
+      title: z.string().describe("Finding title"),
+      severity: z.enum(["critical", "high", "medium", "low", "info"]).describe("Severity"),
+      description: z.string().describe("What was found"),
+      file_path: z.string().optional().describe("Affected file"),
+      pattern_id: z.string().optional().describe("Pattern identifier"),
+      remediation: z.string().optional().describe("How to fix"),
+    })).optional().describe("List of findings"),
+  },
+  async ({ api_key, package_name, package_type, source_url, risk_score, result, max_severity, findings }) => {
+    try {
+      const body: any = {
+        package_name,
+        risk_score,
+        result,
+        findings_count: findings?.length ?? 0,
+      };
+      if (package_type) body.package_type = package_type;
+      if (source_url) body.source_url = source_url;
+      if (max_severity) body.max_severity = max_severity;
+      if (findings) body.findings = findings;
+
+      const res = await fetch(`${API_BASE}/reports`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${api_key}`,
+        },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        return { content: [{ type: "text" as const, text: `❌ Submit failed: ${JSON.stringify(data)}` }] };
+      }
+      const lines = [
+        `✅ **Report submitted for ${package_name}**`,
+        `  Report ID: ${data.report_id}`,
+        `  Findings created: ${data.findings_created?.length ?? 0}`,
+        `  Deduplicated: ${data.findings_deduplicated?.length ?? 0}`,
+        `  View: https://agentaudit.dev/packages/${package_name}`,
+      ];
+      return { content: [{ type: "text" as const, text: lines.join("\n") }] };
+    } catch (e: any) {
+      return { content: [{ type: "text" as const, text: `❌ ${e.message}` }] };
+    }
+  }
+);
+
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
