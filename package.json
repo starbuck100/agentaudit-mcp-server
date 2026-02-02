@@ -1,0 +1,17 @@
+{
+  "name": "agentaudit-mcp-server",
+  "version": "1.1.0",
+  "description": "MCP Server for AgentAudit — check AI package trust scores, risk assessments and security findings",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0"
+  }
+}
