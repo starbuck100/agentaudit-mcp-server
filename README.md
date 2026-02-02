@@ -75,6 +75,13 @@ AgentAudit currently tracks **130+ packages** with **418+ findings** across:
 
 All data is publicly available at [agentaudit.dev](https://agentaudit.dev).
 
+## Related
+
+- 🌐 [AgentAudit Website](https://agentaudit.dev) — Browse the registry
+- 🔧 [AgentAudit GitHub Action](https://github.com/starbuck100/agentaudit-github-action) — CI/CD security scanning
+- 📦 [AgentAudit CLI](https://www.npmjs.com/package/agentaudit) — `npm install -g agentaudit`
+- 🛡️ [AgentAudit Skill](https://clawhub.ai) — `clawhub install agentaudit`
+
 ## License
 
 MIT
