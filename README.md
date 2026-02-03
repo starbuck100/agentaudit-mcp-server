@@ -67,7 +67,7 @@ Once configured, just ask your AI assistant:
 
 ## Database
 
-AgentAudit currently tracks **130+ packages** with **418+ findings** across:
+AgentAudit currently tracks **700+ packages** with **427+ findings** across:
 - npm packages
 - pip packages  
 - MCP servers
