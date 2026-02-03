@@ -1,6 +1,6 @@
 # AgentAudit MCP Server
 
-An MCP (Model Context Protocol) server that connects your AI assistant to the [AgentAudit](https://agentaudit.dev) security database — the first CVE-like registry for AI agent vulnerabilities.
+An MCP (Model Context Protocol) server that connects your AI assistant to the [AgentAudit](https://agentaudit.dev) security database — a registry for AI agent package vulnerabilities, using its own ECAP-ID system (not CVE/NVD).
 
 Check trust scores, risk assessments, and security findings for npm packages, pip packages, MCP servers, and AI agent skills — all from within Claude, Cursor, Windsurf, or any MCP-compatible client.
 
