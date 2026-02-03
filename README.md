@@ -77,7 +77,7 @@ All data is publicly available at [agentaudit.dev](https://agentaudit.dev).
 
 ## Related
 
-- 🌐 [AgentAudit Website](https://agentaudit.dev) — Browse the registry
+- 🌐 [AgentAudit Web](https://github.com/starbuck100/agentaudit-web) — The main platform at [agentaudit.dev](https://agentaudit.dev)
 - 🔧 [AgentAudit GitHub Action](https://github.com/starbuck100/agentaudit-github-action) — CI/CD security scanning
 - 📦 [AgentAudit CLI](https://www.npmjs.com/package/agentaudit) — `npm install -g agentaudit`
 - 🛡️ [AgentAudit Skill](https://clawhub.ai) — `clawhub install agentaudit`
